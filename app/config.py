@@ -12,8 +12,12 @@ class Settings(BaseSettings):
     llm_provider: str = "ollama"
     ollama_url: str = "http://localhost:11434"
     ollama_model: str = "mistral"
-    bedrock_model_id: str = "mistral.mistral-large-2402-v1:0"
-    aws_region: str = "eu-west-3"
+    ollama_num_ctx: int = 4096  # suffit pour 5 extraits ; plus grand déborde des 4 Go de VRAM
+    mistral_api_key: str = ""
+    mistral_model: str = "ministral-14b-latest"
+    # Tarif payant en $ par million de tokens (à vérifier sur mistral.ai/pricing)
+    mistral_price_input_per_m: float = 0.2
+    mistral_price_output_per_m: float = 0.2
 
 
 settings = Settings()
