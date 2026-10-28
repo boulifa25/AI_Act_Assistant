@@ -9,6 +9,9 @@ from app.db import connect
 from app.ingestion.index import embed_query
 
 RRF_K = 60  # constante standard de RRF
+# Les considérants expliquent, les articles obligent : à pertinence égale, l'article passe devant.
+# Mesuré sur eval/questions.jsonl : Retrieval@5 de 14/17 à 15/17.
+RECITAL_WEIGHT = 0.5
 
 
 @dataclass
@@ -26,11 +29,11 @@ class Result:
 
 
 VECTOR_SQL = """
-SELECT id FROM chunks ORDER BY embedding <=> %s::vector LIMIT %s
+SELECT id, article FROM chunks ORDER BY embedding <=> %s::vector LIMIT %s
 """
 
 FULLTEXT_SQL = """
-SELECT id FROM chunks, websearch_to_tsquery('french', %s) q
+SELECT id, article FROM chunks, websearch_to_tsquery('french', %s) q
 WHERE tsv @@ q ORDER BY ts_rank_cd(tsv, q) DESC LIMIT %s
 """
 
@@ -39,13 +42,14 @@ def search(query: str, k: int = 5, candidates: int = 30, conn=None) -> list[Resu
     own = conn is None
     conn = conn or connect()
     try:
-        vec_ids = [r[0] for r in conn.execute(VECTOR_SQL, (embed_query(query), candidates))]
-        ft_ids = [r[0] for r in conn.execute(FULLTEXT_SQL, (query, candidates))]
+        vec = conn.execute(VECTOR_SQL, (embed_query(query), candidates)).fetchall()
+        ft = conn.execute(FULLTEXT_SQL, (query, candidates)).fetchall()
 
         scores: dict[int, float] = {}
-        for ranking in (vec_ids, ft_ids):
-            for rank, cid in enumerate(ranking):
-                scores[cid] = scores.get(cid, 0.0) + 1.0 / (RRF_K + rank + 1)
+        for ranking in (vec, ft):
+            for rank, (cid, article) in enumerate(ranking):
+                weight = RECITAL_WEIGHT if article.startswith("Considérant") else 1.0
+                scores[cid] = scores.get(cid, 0.0) + weight / (RRF_K + rank + 1)
 
         top = sorted(scores, key=scores.get, reverse=True)[:k]
         if not top:

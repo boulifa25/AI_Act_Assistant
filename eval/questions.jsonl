@@ -1,0 +1,20 @@
+{"id": "s01", "type": "simple", "question": "Quelles sont les pratiques d'IA interdites par le règlement ?", "expected": ["5"]}
+{"id": "s02", "type": "simple", "question": "Comment le règlement définit-il un système d'IA ?", "expected": ["3"]}
+{"id": "s03", "type": "simple", "question": "Un chatbot doit-il informer l'utilisateur qu'il interagit avec une IA ?", "expected": ["50"]}
+{"id": "s04", "type": "simple", "question": "Quel est le montant maximal de l'amende en cas de non-respect des pratiques interdites ?", "expected": ["99"]}
+{"id": "s05", "type": "simple", "question": "À partir de quelle date le règlement est-il applicable ?", "expected": ["113"]}
+{"id": "s06", "type": "simple", "question": "Quelles sont les exigences de contrôle humain pour les systèmes d'IA à haut risque ?", "expected": ["14"]}
+{"id": "s07", "type": "simple", "question": "Que doit contenir le système de gestion des risques d'un système d'IA à haut risque ?", "expected": ["9"]}
+{"id": "s08", "type": "simple", "question": "Quelles sont les obligations des fournisseurs de modèles d'IA à usage général ?", "expected": ["53"]}
+{"id": "s09", "type": "simple", "question": "Quand un modèle d'IA à usage général est-il considéré comme présentant un risque systémique ?", "expected": ["51"]}
+{"id": "s10", "type": "simple", "question": "Qu'est-ce qu'un bac à sable réglementaire de l'IA ?", "expected": ["57"]}
+{"id": "s11", "type": "simple", "question": "Les contenus générés par hypertrucage (deepfakes) doivent-ils être signalés ?", "expected": ["50"]}
+{"id": "s12", "type": "simple", "question": "Quelle obligation de maîtrise de l'IA s'impose aux fournisseurs et aux déployeurs ?", "expected": ["4"]}
+{"id": "s13", "type": "simple", "question": "Qui doit réaliser une analyse d'impact sur les droits fondamentaux ?", "expected": ["27"]}
+{"id": "s14", "type": "simple", "question": "Le règlement s'applique-t-il aux systèmes d'IA utilisés à des fins militaires ?", "expected": ["2"]}
+{"id": "c01", "type": "cas", "question": "Un système d'IA qui trie automatiquement des CV pour un recrutement est-il à haut risque ?", "expected": ["Annexe III", "6"]}
+{"id": "c02", "type": "cas", "question": "Une banque peut-elle utiliser une IA pour évaluer la solvabilité de ses clients ? Quel niveau de risque ?", "expected": ["Annexe III", "6"]}
+{"id": "c03", "type": "cas", "question": "Un employeur peut-il utiliser une IA de reconnaissance des émotions pour surveiller ses salariés ?", "expected": ["5"]}
+{"id": "p01", "type": "piege", "question": "Quel est le salaire moyen d'un data scientist en France ?", "expected": []}
+{"id": "p02", "type": "piege", "question": "Combien coûte une évaluation de conformité auprès d'un organisme notifié ?", "expected": []}
+{"id": "p03", "type": "piege", "question": "Quel commissaire européen est chargé de l'application de l'AI Act ?", "expected": []}
