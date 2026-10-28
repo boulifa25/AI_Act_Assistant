@@ -21,7 +21,8 @@ class LLMProvider(ABC):
     name: str
 
     @abstractmethod
-    def generate(self, prompt: str, system: str | None = None) -> LLMResponse:
+    def generate(self, prompt: str, system: str | None = None, json_mode: bool = False) -> LLMResponse:
+        """json_mode=True force une réponse JSON valide (classification)."""
         ...
 
 

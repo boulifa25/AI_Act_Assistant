@@ -14,5 +14,22 @@ services:
       interval: 5s
       retries: 10
 
+  api:
+    build: .
+    env_file: .env
+    environment:
+      # Surcharge du .env : dans Docker, la base s'appelle "db" et Ollama tourne sur la machine hôte.
+      DB_URL: postgresql://aiact:aiact@db:5432/aiact
+      OLLAMA_URL: http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data:ro   # le PDF, indexé au premier démarrage si la base est vide
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   pgdata:

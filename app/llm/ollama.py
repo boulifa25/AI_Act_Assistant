@@ -15,17 +15,20 @@ class OllamaProvider(LLMProvider):
         self.model = settings.ollama_model
         self.client = httpx.Client(base_url=settings.ollama_url, timeout=300)
 
-    def generate(self, prompt: str, system: str | None = None) -> LLMResponse:
+    def generate(self, prompt: str, system: str | None = None, json_mode: bool = False) -> LLMResponse:
         messages = [{"role": "system", "content": system}] if system else []
         messages.append({"role": "user", "content": prompt})
 
         start = time.perf_counter()
-        r = self.client.post("/api/chat", json={
+        payload = {
             "model": self.model,
             "messages": messages,
             "stream": False,
             "options": {"temperature": 0, "num_ctx": settings.ollama_num_ctx},
-        })
+        }
+        if json_mode:
+            payload["format"] = "json"
+        r = self.client.post("/api/chat", json=payload)
         r.raise_for_status()
         latency = time.perf_counter() - start
         data = r.json()

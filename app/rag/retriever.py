@@ -28,22 +28,28 @@ class Result:
         return f"Article {self.article}" if self.article.isdigit() else self.article
 
 
+# %(articles)s à NULL : pas de filtre ; sinon restreint aux articles donnés (["5"], ["Annexe III"]...).
 VECTOR_SQL = """
-SELECT id, article FROM chunks ORDER BY embedding <=> %s::vector LIMIT %s
+SELECT id, article FROM chunks
+WHERE %(articles)s::text[] IS NULL OR article = ANY(%(articles)s)
+ORDER BY embedding <=> %(vec)s::vector LIMIT %(n)s
 """
 
 FULLTEXT_SQL = """
-SELECT id, article FROM chunks, websearch_to_tsquery('french', %s) q
-WHERE tsv @@ q ORDER BY ts_rank_cd(tsv, q) DESC LIMIT %s
+SELECT id, article FROM chunks, websearch_to_tsquery('french', %(q)s) q
+WHERE tsv @@ q AND (%(articles)s::text[] IS NULL OR article = ANY(%(articles)s))
+ORDER BY ts_rank_cd(tsv, q) DESC LIMIT %(n)s
 """
 
 
-def search(query: str, k: int = 5, candidates: int = 30, conn=None) -> list[Result]:
+def search(query: str, k: int = 5, candidates: int = 30, articles: list[str] | None = None,
+           conn=None) -> list[Result]:
     own = conn is None
     conn = conn or connect()
     try:
-        vec = conn.execute(VECTOR_SQL, (embed_query(query), candidates)).fetchall()
-        ft = conn.execute(FULLTEXT_SQL, (query, candidates)).fetchall()
+        params = {"q": query, "vec": embed_query(query), "n": candidates, "articles": articles}
+        vec = conn.execute(VECTOR_SQL, params).fetchall()
+        ft = conn.execute(FULLTEXT_SQL, params).fetchall()
 
         scores: dict[int, float] = {}
         for ranking in (vec, ft):

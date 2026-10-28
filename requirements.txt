@@ -7,3 +7,7 @@ sentence-transformers==3.3.1
 python-dotenv==1.0.1
 pydantic-settings==2.7.1
 httpx==0.28.1
+langgraph==1.2.18
+langchain-core==1.7.0
+# 0.19 est bloqué par le contrôle d'applications de Windows (DLL non signée)
+uuid_utils==0.14.0

@@ -37,12 +37,15 @@ class MistralAPIProvider(LLMProvider):
         r.raise_for_status()
         return r
 
-    def generate(self, prompt: str, system: str | None = None) -> LLMResponse:
+    def generate(self, prompt: str, system: str | None = None, json_mode: bool = False) -> LLMResponse:
         messages = [{"role": "system", "content": system}] if system else []
         messages.append({"role": "user", "content": prompt})
 
         start = time.perf_counter()
-        data = self._post({"model": self.model, "messages": messages, "temperature": 0}).json()
+        payload = {"model": self.model, "messages": messages, "temperature": 0}
+        if json_mode:
+            payload["response_format"] = {"type": "json_object"}
+        data = self._post(payload).json()
         latency = time.perf_counter() - start
 
         usage = data["usage"]

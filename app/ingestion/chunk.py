@@ -97,7 +97,8 @@ def chunk_text(text: str) -> list[Chunk]:
             if unit:
                 _emit(unit, chunks)
                 unit = None
-            chapitre = f"Chapitre {m.group(1)} — {re.sub(r"\bia\b", "IA", nxt.capitalize()) if nxt.isupper() else nxt}"
+            titre_chapitre = re.sub(r"\bia\b", "IA", nxt.capitalize()) if nxt.isupper() else nxt
+            chapitre = f"Chapitre {m.group(1)} — {titre_chapitre}"
             i += 2
             continue
 
